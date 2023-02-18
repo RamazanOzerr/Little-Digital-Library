@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E2F1D6"
+    android:orientation="vertical"
+    tools:context=".Activities.SignUpActivity">
+
+
+    <EditText
+        android:id="@+id/passwordSignUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:ems="10"
+        android:hint="Password"
+        android:textColorHint="#D500F9"
+        android:textStyle="italic"
+        android:textColor="#D500F9"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="@+id/emailSignUp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/emailSignUp"
+        app:layout_constraintTop_toBottomOf="@+id/emailSignUp" />
+
+    <EditText
+        android:id="@+id/passwordSignUp_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:ems="10"
+        android:textColorHint="#D500F9"
+        android:textStyle="italic"
+        android:textColor="#D500F9"
+        android:hint="Password Again"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="@+id/passwordSignUp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/passwordSignUp"
+        app:layout_constraintTop_toBottomOf="@+id/passwordSignUp" />
+
+    <EditText
+        android:id="@+id/emailSignUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="244dp"
+        android:hint="Email"
+        android:ems="10"
+        android:textColorHint="#D500F9"
+        android:textStyle="italic"
+        android:textColor="#D500F9"
+        android:inputType="textEmailAddress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/signUpbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="244dp"
+        android:backgroundTint="#009688"
+        android:text="SIGN UP"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/passwordSignUp_1"
+        app:layout_constraintStart_toStartOf="@+id/passwordSignUp_1" />
+
+    <ProgressBar
+        android:id="@+id/progressBarSignUp"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="108dp"
+        android:visibility="invisible"
+        android:layout_marginBottom="96dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/signUpbutton"
+        app:layout_constraintStart_toStartOf="@+id/signUpbutton"
+        app:layout_constraintTop_toBottomOf="@+id/signUpbutton" />
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/ImageViewSignUp"
+        app:layout_constraintBottom_toTopOf="@+id/emailSignUp"
+        app:layout_constraintEnd_toEndOf="@+id/emailSignUp"
+        app:layout_constraintStart_toStartOf="@+id/emailSignUp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/splashicon1"
+        />
+
+
+    <TextView
+        android:id="@+id/loginText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Have an account? Log In"
+        android:textStyle="italic"
+        android:textColor="#D500F9"
+        app:layout_constraintEnd_toEndOf="@+id/signUpbutton"
+        app:layout_constraintStart_toStartOf="@+id/signUpbutton"
+        app:layout_constraintTop_toBottomOf="@+id/signUpbutton" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
