@@ -5,12 +5,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.spring_android_project.Adapters.CustomViewPager;
 import com.example.spring_android_project.Fragments.AvailableBooksFragment;
 import com.example.spring_android_project.Fragments.DowloadedBooksFragment;
 import com.example.spring_android_project.R;
@@ -18,6 +21,7 @@ import com.example.spring_android_project.Services.UserService;
 import com.example.spring_android_project.Utils.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
     List<User> listUser = new ArrayList<>();
     ListView listView;
     private BottomNavigationView navigationView;
+    CustomViewPager customViewPager;
+    TabLayout tabLayout;
+    ViewPager viewPager;
 
 
     @Override
@@ -37,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         init();
         replaceFragments(new AvailableBooksFragment());
+        setFragments();
 
         navigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -50,10 +58,14 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        navigationView.setVisibility(View.GONE);
     }
 
     private void init(){
         navigationView = findViewById(R.id.bottom_navigation);
+        tabLayout = findViewById(R.id.tablayout);
+        viewPager = findViewById(R.id.view_pager);
     }
 
 
@@ -63,6 +75,16 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout_main,fragment);
         fragmentTransaction.commit();
+    }
+
+    private void setFragments(){
+        customViewPager = new CustomViewPager(getSupportFragmentManager());
+        customViewPager.addFragment(new AvailableBooksFragment(),"Available Books");
+        customViewPager.addFragment(new DowloadedBooksFragment(),"Downloaded Books");
+
+        viewPager.setAdapter(customViewPager);
+
+        tabLayout.setupWithViewPager(viewPager);
     }
 
 }

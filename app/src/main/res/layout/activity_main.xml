@@ -36,14 +36,34 @@
             style="@style/Widget.MaterialComponents.Toolbar.Primary"
             />
 
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tablayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#009688"
+            app:tabIndicatorColor="#32013A"
+            app:tabIndicatorHeight="5dp"
+            app:tabSelectedTextColor="#40044A"
+            app:tabTextColor="@color/white"
+            android:minHeight="?attr/actionBarSize"
+            />
+
     </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/appBarLayout"
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout"
+        />
 
     <FrameLayout
         android:id="@+id/frame_layout_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@+id/appBarLayout"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+        app:layout_constraintTop_toBottomOf="@+id/view_pager"
         />
 
 
