@@ -13,11 +13,15 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.spring_android_project.Adapters.AvailableBooksAdapter;
 import com.example.spring_android_project.Adapters.CustomViewPager;
+import com.example.spring_android_project.Apis.Api;
 import com.example.spring_android_project.Fragments.AvailableBooksFragment;
 import com.example.spring_android_project.Fragments.DowloadedBooksFragment;
 import com.example.spring_android_project.R;
+import com.example.spring_android_project.Services.BookService;
 import com.example.spring_android_project.Services.UserService;
+import com.example.spring_android_project.Utils.Book;
 import com.example.spring_android_project.Utils.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -26,10 +30,16 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MainActivity extends AppCompatActivity {
 
     UserService userService;
+    BookService bookService;
     List<User> listUser = new ArrayList<>();
+    List<Book> listBook = new ArrayList<>();
     ListView listView;
     private BottomNavigationView navigationView;
     CustomViewPager customViewPager;
@@ -61,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
 
         navigationView.setVisibility(View.GONE);
     }
+
+
 
     private void init(){
         navigationView = findViewById(R.id.bottom_navigation);

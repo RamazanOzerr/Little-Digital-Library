@@ -39,6 +39,7 @@ public class AvailableBooksAdapter extends RecyclerView.Adapter<AvailableBooksAd
         this.context = context;
     }
 
+
     @NonNull
     @Override
     public AvailableBooksAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
