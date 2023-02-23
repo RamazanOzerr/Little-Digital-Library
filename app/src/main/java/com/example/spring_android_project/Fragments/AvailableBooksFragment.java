@@ -55,8 +55,7 @@ public class AvailableBooksFragment extends Fragment {
         recyclerView_available_books = view.findViewById(R.id.recyclerView_available_books);
         RecyclerView.LayoutManager mng = new GridLayoutManager(getContext(), 1);
         recyclerView_available_books.setLayoutManager(mng);
-        adapter = new AvailableBooksAdapter(bookList, getActivity(), getContext());
-        recyclerView_available_books.setAdapter(adapter);
+
     }
 
     // TODO KITAP BILGILERINI DB DEN BURDA CEKIYORUZ
@@ -76,7 +75,13 @@ public class AvailableBooksFragment extends Fragment {
            @Override
            public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
                bookList = response.body();
+               adapter = new AvailableBooksAdapter(bookList, getActivity(), getContext());
+               recyclerView_available_books.setAdapter(adapter);
 
+               System.out.println(bookList.size());
+               for (Book b : bookList) {
+                   System.out.println(b.getBookName() + " " + b.getLink() + " " + b.getPhotoPath());
+               }
            }
 
            @Override

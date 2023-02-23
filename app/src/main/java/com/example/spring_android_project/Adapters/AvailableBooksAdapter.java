@@ -57,6 +57,7 @@ public class AvailableBooksAdapter extends RecyclerView.Adapter<AvailableBooksAd
             @Override
             public void onClick(View view) {
                 downloadBook(bookList.get(position).getLink());
+                System.out.println(bookList.get(position).getLink());
             }
         });
     }
@@ -89,7 +90,7 @@ public class AvailableBooksAdapter extends RecyclerView.Adapter<AvailableBooksAd
 
         String title = URLUtil.guessFileName(url,null,null);
         request.setTitle(title);
-        request.setDescription("book is downlading...");
+        request.setDescription("book is downloading...");
         String cookie = CookieManager.getInstance().getCookie(url);
         request.addRequestHeader("cookie",cookie);
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
