@@ -14,7 +14,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.spring_android_project.Apis.Api;
 import com.example.spring_android_project.R;
+import com.example.spring_android_project.Services.UserService;
+import com.example.spring_android_project.Utils.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -29,16 +32,21 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 import java.util.Map;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class SignUpActivity extends AppCompatActivity {
 
-    private EditText passwordSignUp, passwordSignUp_1, emailSignUp, name, editText_last_name;
-    private TextView loginText;
-    private Button signUpbutton;
-    private ImageView ImageViewSignUp;
-    private ProgressBar progressBarSignUp;
-    FirebaseAuth auth;
-    DatabaseReference reference;
-    FirebaseUser user;
+     EditText passwordSignUp, passwordSignUp_1, emailSignUp, name, editText_last_name;
+     TextView loginText;
+     Button signUpbutton;
+     ImageView ImageViewSignUp;
+     ProgressBar progressBarSignUp;
+     FirebaseAuth auth;
+     DatabaseReference reference;
+     FirebaseUser user;
+     UserService userService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,8 +119,14 @@ public class SignUpActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
                         if (task.isSuccessful()) {
-                            setUserInfoIntoDb(email,namee,last_name);
+                            setUserInfoIntoDb(namee,last_name, email);
                             //TODO BURASI
+
+                            User user = new User(namee, last_name, email); // create user
+                            System.out.println(user);
+                            postAddedUserToApi(user);
+
+
                             Toast.makeText(SignUpActivity.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), LogInActivity.class));
 
@@ -126,7 +140,32 @@ public class SignUpActivity extends AppCompatActivity {
     });
 }
 
-    private void setUserInfoIntoDb(String email, String namee, String last_name){
+    private void postAddedUserToApi(User user) {
+
+        userService = Api.getUserService();
+        Call<User> userCall = userService.addUser(user);
+        userCall.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+
+                if (!response.isSuccessful()) {
+                    System.out.println("SUCCESFULLY ADDED");
+                    System.out.println(response.code());
+                    return;
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                System.out.println("FAILED");
+            }
+        });
+
+
+    }
+
+    private void setUserInfoIntoDb( String namee, String last_name, String email){
 //        reference.child("Users").child(user.getUid());
 //        Map<String, String> map = new HashMap<>();
 //        map.put("id","1");
@@ -138,12 +177,11 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int count = (int) snapshot.getChildrenCount();
-                DatabaseReference databaseReference = reference.child("Users").child(user.getUid());
+                DatabaseReference databaseReference = reference.child("Users").child(String.valueOf(count+1));
                 databaseReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Map<String, String> map = new HashMap<>();
-                        map.put("id",String.valueOf(count+1));
                         map.put("name",namee);
                         map.put("last name",last_name);
                         map.put("email",email);
