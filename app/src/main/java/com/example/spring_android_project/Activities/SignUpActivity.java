@@ -19,18 +19,26 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    private EditText passwordSignUp, passwordSignUp_1, emailSignUp;
+    private EditText passwordSignUp, passwordSignUp_1, emailSignUp, name, editText_last_name;
     private TextView loginText;
     private Button signUpbutton;
     private ImageView ImageViewSignUp;
     private ProgressBar progressBarSignUp;
     FirebaseAuth auth;
+    DatabaseReference reference;
+    FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +58,10 @@ public class SignUpActivity extends AppCompatActivity {
         ImageViewSignUp = findViewById(R.id.ImageViewSignUp);
         progressBarSignUp = findViewById(R.id.progressBarSignUp);
         auth = FirebaseAuth.getInstance();
+        reference = FirebaseDatabase.getInstance().getReference();
+        user = auth.getCurrentUser();
+        name = findViewById(R.id.name);
+        editText_last_name = findViewById(R.id.editText_last_name);
     }
 
     private void signUp(){
@@ -57,10 +69,21 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                String namee = name.getText().toString().trim();
+                String last_name = editText_last_name.getText().toString().trim();
                 String email = emailSignUp.getText().toString().trim();
                 String password = passwordSignUp.getText().toString().trim();
                 String password2 = passwordSignUp_1.getText().toString().trim();
 
+
+                if(TextUtils.isEmpty(namee)){
+                    name.setError("name is required");
+                    return;
+                }
+                if(TextUtils.isEmpty(last_name)){
+                    name.setError("last name is required");
+                    return;
+                }
 
                 if (TextUtils.isEmpty(email)) {
                     emailSignUp.setError("Email is required");
@@ -88,17 +111,84 @@ public class SignUpActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
                         if (task.isSuccessful()) {
-
+                            setUserInfoIntoDb(email,namee,last_name);
+                            //TODO BURASI
                             Toast.makeText(SignUpActivity.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), LogInActivity.class));
 
                         } else {
                             Toast.makeText(SignUpActivity.this, "Error!" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-
+                            progressBarSignUp.setVisibility(View.GONE);
                         }
                     }
                 });
             }
     });
 }
+
+    private void setUserInfoIntoDb(String email, String namee, String last_name){
+//        reference.child("Users").child(user.getUid());
+//        Map<String, String> map = new HashMap<>();
+//        map.put("id","1");
+//        map.put("email",email); //alternatif olarak user.getEmail() de kullanılabilir
+//        reference.setValue(map);
+
+
+        reference.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int count = (int) snapshot.getChildrenCount();
+                DatabaseReference databaseReference = reference.child("Users").child(user.getUid());
+                databaseReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Map<String, String> map = new HashMap<>();
+                        map.put("id",String.valueOf(count+1));
+                        map.put("name",namee);
+                        map.put("last name",last_name);
+                        map.put("email",email);
+                        databaseReference.setValue(map);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+//        reference.child("Users").addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                int count = (int) snapshot.getChildrenCount();
+//                DatabaseReference databaseReference = reference.child("Users").child(user.getUid());
+//                databaseReference.addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        Map<String, String> map = new HashMap<>();
+//                        map.put("id",String.valueOf(count));
+//                        map.put("email",email);
+//                        databaseReference.setValue(map);
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+    }
+
 }

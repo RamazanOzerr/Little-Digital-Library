@@ -53,12 +53,10 @@ public class AvailableBooksAdapter extends RecyclerView.Adapter<AvailableBooksAd
     public void onBindViewHolder(@NonNull AvailableBooksAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         Picasso.get().load(bookList.get(position).getPhotoPath()).into(holder.book_image_available);
         holder.book_name_available.setText(bookList.get(position).getBookName());
-        holder.downloadbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                downloadBook(bookList.get(position).getLink());
-                System.out.println(bookList.get(position).getLink());
-            }
+
+        holder.downloadbtn.setOnClickListener(view -> {
+            downloadBook(bookList.get(position).getLink());
+            System.out.println(bookList.get(position).getLink());
         });
     }
 

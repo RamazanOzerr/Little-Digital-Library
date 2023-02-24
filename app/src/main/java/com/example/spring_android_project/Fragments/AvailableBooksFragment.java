@@ -28,9 +28,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AvailableBooksFragment extends Fragment {
+
     UserService userService;
     BookService bookService;
-
 
     private List<Book> bookList;
     private RecyclerView recyclerView_available_books;
@@ -55,18 +55,35 @@ public class AvailableBooksFragment extends Fragment {
         recyclerView_available_books = view.findViewById(R.id.recyclerView_available_books);
         RecyclerView.LayoutManager mng = new GridLayoutManager(getContext(), 1);
         recyclerView_available_books.setLayoutManager(mng);
+        adapter = new AvailableBooksAdapter(bookList, getActivity(), getContext());
+        recyclerView_available_books.setAdapter(adapter);
 
     }
 
     // TODO KITAP BILGILERINI DB DEN BURDA CEKIYORUZ
    private void getBooks() {
 
-        /*//TODO DB DEN PHOTO PATH VE NAME BILGILERINI CEK, LISTEYE EKLE
-        String photoPath = "https://firebasestorage.googleapis.com/v0/b/libraryproject-1c015.appspot.com/o/book4.png?alt=media&token=f08c44fe-02f4-467e-869d-6b51fc774978";
-        String name = "name";
-        String link = "link";
+        //TODO DB DEN PHOTO PATH VE NAME BILGILERINI CEK, LISTEYE EKLE
+//        String photoPath = "https://firebasestorage.googleapis.com/v0/b/libraryproject-1c015.appspot.com/o/book4.png?alt=media&token=f08c44fe-02f4-467e-869d-6b51fc774978";
+//        String name = "name";
+//        String link = "link";
+//
+//        bookList.add(new Book(photoPath,name,link));
+//        bookList.add(new Book(photoPath,name,link));
+//        bookList.add(new Book(photoPath,name,link));
+//        bookList.add(new Book(photoPath,name,link));
+//        bookList.add(new Book(photoPath,name,link));
+//       bookList.add(new Book(photoPath,name,link));
+//       bookList.add(new Book(photoPath,name,link));
+//       bookList.add(new Book(photoPath,name,link));
+//       bookList.add(new Book(photoPath,name,link));
+//       bookList.add(new Book(photoPath,name,link));
+//       bookList.add(new Book(photoPath,name,link));
+//       bookList.add(new Book(photoPath,name,link));
+//       bookList.add(new Book(photoPath,name,link));
+//       bookList.add(new Book(photoPath,name,link));
 
-        bookList.add(new Book(photoPath,name,link));*/
+
        bookService = Api.getBookService();
        Call<List<Book>> call =
                bookService.getBooks();
@@ -86,7 +103,7 @@ public class AvailableBooksFragment extends Fragment {
 
            @Override
            public void onFailure(Call<List<Book>> call, Throwable t) {
-               System.out.println("adsdasdas");
+               System.out.println("error");
 
            }
        });
