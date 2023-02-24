@@ -103,7 +103,7 @@ public class AvailableBooksFragment extends Fragment {
 
            @Override
            public void onFailure(Call<List<Book>> call, Throwable t) {
-               System.out.println("adsdasdas");
+               System.out.println("error");
 
            }
        });

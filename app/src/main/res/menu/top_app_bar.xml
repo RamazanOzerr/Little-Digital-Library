@@ -9,8 +9,8 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/more"
-        android:title="more"
+        android:id="@+id/log_out"
+        android:title="log out"
         android:contentDescription="content_description_more"
         app:showAsAction="never" />
 
