@@ -1,21 +1,20 @@
 package com.example.spring_android_project.Utils;
 
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class User {
 
-    private int id;
 
+    private int id;
 
     private String firstName;
 
-
     private String lastName;
 
-
     private String email;
-
 
     private List<Book> bookList;
 
