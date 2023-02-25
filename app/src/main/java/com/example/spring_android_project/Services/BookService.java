@@ -15,9 +15,9 @@ public interface BookService {
     @GET("books")  // todo : get all books in the db  (DONE)
     Call<List<Book>> getBooks();
 
-    @POST("books/{userId}/{bookId}")  // todo : add a book for a user
-    Call<User> addBookForUser(@Path("userId") int userId,
-                              @Path("bookId") int bookdId);
+    @POST("books/{userId}/{bookId}")  // todo : add a book for a user  (DONE)
+    Call<Book> addBookForUser(@Path("userId") int userId,
+                              @Path("bookId") int bookId);
 
 
 

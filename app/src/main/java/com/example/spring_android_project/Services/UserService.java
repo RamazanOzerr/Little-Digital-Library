@@ -17,11 +17,11 @@ public interface UserService {
     @GET("users/{userId}")  //todo : return the user
     Call<User> getUser(@Path("userId") int userId);
 
-    @POST("users") // todo: add the user when signed up
+    @POST("users") // todo: add the user when signed up  (DONE)
     Call<User> addUser(@Body User user);
 
     // todo: delete the user by given user id
 
     @GET("users/{userId}/books")  // todo: get all books for a user (downloaded books)
-    Call<Book> getAllBooksForUser(@Path("userId") int userId);
+    Call<List<Book>> getAllBooksForUser(@Path("userId") int userId);
 }

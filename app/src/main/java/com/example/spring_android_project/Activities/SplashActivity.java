@@ -39,7 +39,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 //TODO şimdilik direkt log in e atıyoruz
-//                startActivity(new Intent(getApplicationContext(), LogInActivity.class));
+             //   startActivity(new Intent(getApplicationContext(), LogInActivity.class));
                 if(auth.getCurrentUser() != null){
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 }else{

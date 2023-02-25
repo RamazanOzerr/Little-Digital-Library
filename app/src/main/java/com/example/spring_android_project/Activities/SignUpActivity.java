@@ -124,7 +124,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                             User user = new User(namee, last_name, email); // create user
                             System.out.println(user);
-                            postAddedUserToApi(user);
+                            postAddUserToApi(user);
 
 
                             Toast.makeText(SignUpActivity.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
@@ -140,7 +140,7 @@ public class SignUpActivity extends AppCompatActivity {
     });
 }
 
-    private void postAddedUserToApi(User user) {
+    private void postAddUserToApi(User user) {
 
         userService = Api.getUserService();
         Call<User> userCall = userService.addUser(user);
