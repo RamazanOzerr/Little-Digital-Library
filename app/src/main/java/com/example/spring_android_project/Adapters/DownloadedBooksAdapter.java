@@ -2,6 +2,7 @@ package com.example.spring_android_project.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.spring_android_project.Activities.PDFViewActivity;
 import com.example.spring_android_project.R;
 import com.example.spring_android_project.Utils.Book;
 import com.squareup.picasso.Picasso;
@@ -76,7 +78,9 @@ public class DownloadedBooksAdapter extends RecyclerView.Adapter<DownloadedBooks
 
     //TODO method sonra doldurulacak
     private void displayBook(String book_name){
-
+        Intent intent = new Intent(context, PDFViewActivity.class);
+        intent.putExtra("book_name",book_name);
+        activity.startActivity(intent);
     }
 }
 

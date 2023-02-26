@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.URLUtil;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,7 +72,10 @@ public class AvailableBooksAdapter extends RecyclerView.Adapter<AvailableBooksAd
     @Override
     public void onBindViewHolder(@NonNull AvailableBooksAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         Picasso.get().load(bookList.get(position).getPhotoPath()).into(holder.book_image_available);
-        holder.book_name_available.setText(bookList.get(position).getBookName());
+//        holder.book_name_available.setText(bookList.get(position).getBookName());
+        holder.text_name_view.setText(bookList.get(position).getBookName());
+        holder.text_page_view.setText(String.valueOf(bookList.get(position).getPages()));
+        holder.text_title_view.setText(bookList.get(position).getTitle());
 
         holder.downloadbtn.setOnClickListener(view -> {
             downloadBook(bookList.get(position).getLink());
@@ -91,9 +96,10 @@ public class AvailableBooksAdapter extends RecyclerView.Adapter<AvailableBooksAd
         return bookList.size();
     }
 
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView book_name_available;
+        TextView book_name_available, text_name_view, text_page_view, text_title_view;
         CircleImageView book_image_available;
         CardView cardview_available_books;
         Button downloadbtn;
@@ -105,6 +111,9 @@ public class AvailableBooksAdapter extends RecyclerView.Adapter<AvailableBooksAd
             cardview_available_books = itemView.findViewById(R.id.cardview_available_books);
             book_image_available = itemView.findViewById(R.id.book_image_available);
             downloadbtn = itemView.findViewById(R.id.download_btn);
+            text_name_view = itemView.findViewById(R.id.text_name_view);
+            text_page_view = itemView.findViewById(R.id.text_page_view);
+            text_title_view = itemView.findViewById(R.id.text_title_view);
 
         }
     }
@@ -112,7 +121,8 @@ public class AvailableBooksAdapter extends RecyclerView.Adapter<AvailableBooksAd
     private void downloadBook(String url) {
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
 
-        String title = URLUtil.guessFileName(url, null, null);
+//        String title = URLUtil.guessFileName(url, null, null);
+        String title = "sample2.pdf";
         request.setTitle(title);
         request.setDescription("book is downloading...");
         String cookie = CookieManager.getInstance().getCookie(url);

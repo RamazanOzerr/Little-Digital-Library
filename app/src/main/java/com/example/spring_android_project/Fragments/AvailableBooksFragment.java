@@ -64,11 +64,15 @@ public class AvailableBooksFragment extends Fragment {
    private void getBooks() {
 
         //TODO DB DEN PHOTO PATH VE NAME BILGILERINI CEK, LISTEYE EKLE
-//        String photoPath = "https://firebasestorage.googleapis.com/v0/b/libraryproject-1c015.appspot.com/o/book4.png?alt=media&token=f08c44fe-02f4-467e-869d-6b51fc774978";
-//        String name = "name";
-//        String link = "link";
+        String photoPath = "https://firebasestorage.googleapis.com/v0/b/libraryproject-1c015.appspot.com/o/book4.png?alt=media&token=f08c44fe-02f4-467e-869d-6b51fc774978";
+        String name = "name";
+        String link = "http://62.182.86.140/main/266000/16c402f4f9b737ea33c4ea5d938331a0/George%20Orwell%2C%20Erich%20Fromm%2C%20Thomas%20Pynchon%2C%20Daniel%20Lagin%20-%20Nineteen%20Eighty-Four-Plume%20%282003%29.pdf";
 //
-//        bookList.add(new Book(photoPath,name,link));
+        bookList.add(new Book(photoPath,name,link,"komedi",31));
+           bookList.add(new Book(photoPath,name,link,"komedi",31));
+           bookList.add(new Book(photoPath,name,link,"komedi",31));
+           bookList.add(new Book(photoPath,name,link,"komedi",31));
+
 //        bookList.add(new Book(photoPath,name,link));
 //        bookList.add(new Book(photoPath,name,link));
 //        bookList.add(new Book(photoPath,name,link));

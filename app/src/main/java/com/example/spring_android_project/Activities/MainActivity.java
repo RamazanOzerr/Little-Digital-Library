@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.example.spring_android_project.Adapters.CustomViewPager;
 import com.example.spring_android_project.Fragments.AvailableBooksFragment;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser user;
     private FirebaseAuth firebaseAuth;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,18 +59,18 @@ public class MainActivity extends AppCompatActivity {
         replaceFragments(new AvailableBooksFragment());
         setFragments();
 
-        navigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-                if(item.getItemId() == R.id.page1){
-                    replaceFragments(new AvailableBooksFragment());
-                }else if(item.getItemId() == R.id.page2) {
-                    replaceFragments(new DowloadedBooksFragment());
-                }
-                return false;
-            }
-        });
+//        navigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//
+//                if(item.getItemId() == R.id.page1){
+//                    replaceFragments(new AvailableBooksFragment());
+//                }else if(item.getItemId() == R.id.page2) {
+//                    replaceFragments(new DowloadedBooksFragment());
+//                }
+//                return false;
+//            }
+//        });
 
         navigationView.setVisibility(View.GONE);
     }
@@ -82,6 +84,8 @@ public class MainActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         toolbar = findViewById(R.id.topAppBar);
         setSupportActionBar(toolbar);
+
+
         //TODO deneme için yazmıştık bunu, sonra sileriz
 //        user = FirebaseAuth.getInstance().getCurrentUser();
 //        reference = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid()).child("id");
@@ -132,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.search:
                 Toast.makeText(getApplicationContext(),"CLICKED SEARCH",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getApplicationContext(), PDFViewActivity.class));
                 return true;
 
             case R.id.log_out:

@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,6 +46,7 @@ public class DowloadedBooksFragment extends Fragment {
     FirebaseUser firebaseUser;
     DatabaseReference databaseReference;
     View view;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,6 +55,10 @@ public class DowloadedBooksFragment extends Fragment {
 
         init();
         getCurrentUserId();
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            getCurrentUserId();
+            swipeRefreshLayout.setRefreshing(false);
+        });
 
         return view;
     }
@@ -64,6 +70,7 @@ public class DowloadedBooksFragment extends Fragment {
         recyclerView_downloaded_books.setLayoutManager(mng);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         databaseReference = FirebaseDatabase.getInstance().getReference();
+        swipeRefreshLayout = view.findViewById(R.id.swipe_to_refresh_layout);
 
     }
 
@@ -74,14 +81,24 @@ public class DowloadedBooksFragment extends Fragment {
 
         // todo: firebase current user -- returns user id.
         // todo: post (/books/userid/bookid)
+        String photoPath = "https://firebasestorage.googleapis.com/v0/b/libraryproject-1c015.appspot.com/o/book4.png?alt=media&token=f08c44fe-02f4-467e-869d-6b51fc774978";
+        String name = "name";
+        String link = "link";
+
+
+        bookList.add(new Book(photoPath,name,link));
+        bookList.add(new Book(photoPath,name,link));
+        bookList.add(new Book(photoPath,name,link));
+        bookList.add(new Book(photoPath,name,link));
+        bookList.add(new Book(photoPath,name,link));
+        adapter = new DownloadedBooksAdapter(bookList,getActivity(),getContext());
+        recyclerView_downloaded_books.setAdapter(adapter);
 
         databaseReference.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String userId;
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    System.out.println("****************************************************************");
-                    System.out.println(firebaseUser.toString());
                     if (dataSnapshot.child("email").getValue().toString().equals(firebaseUser.getEmail())) {
 
                         userId = dataSnapshot.getKey();

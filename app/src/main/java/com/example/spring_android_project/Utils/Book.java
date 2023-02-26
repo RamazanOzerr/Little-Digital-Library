@@ -9,11 +9,12 @@ public class Book {
     private String link;
     private String photoPath;
 
-    public Book(String bookName, String title, int pages, String link) {
+    public Book(String photoPath, String bookName, String link, String title, int pages) {
         this.bookName = bookName;
         this.title = title;
         this.pages = pages;
         this.link = link;
+        this.photoPath = photoPath;
     }
     public Book(String photoPath, String bookName, String link) {
         this.photoPath = photoPath;
