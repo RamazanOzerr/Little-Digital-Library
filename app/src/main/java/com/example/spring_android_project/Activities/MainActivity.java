@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.spring_android_project.Adapters.CustomViewPager;
@@ -127,6 +128,21 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.top_app_bar, menu);
+
+//        MenuItem searchItem = menu.findItem(R.id.search);
+//        SearchView searchView = (SearchView) searchItem.getActionView();
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String s) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String s) {
+//                Toast.makeText(MainActivity.this, "MAIN DEYIZ", Toast.LENGTH_LONG).show();
+//                return false;
+//            }
+//        });
         return true;
     }
 
@@ -136,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.search:
                 Toast.makeText(getApplicationContext(),"CLICKED SEARCH",Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(getApplicationContext(), PDFViewActivity.class));
+//                startActivity(new Intent(getApplicationContext(), PDFViewActivity.class));
                 return true;
 
             case R.id.log_out:

@@ -36,6 +36,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -43,9 +45,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AvailableBooksAdapter extends RecyclerView.Adapter<AvailableBooksAdapter.ViewHolder> {
+public class AvailableBooksAdapter extends RecyclerView.Adapter<AvailableBooksAdapter.ViewHolder> implements Filterable{
 
     private List<Book> bookList;
+    private List<Book> bookListFull;
     Activity activity;
     Context context;
     DatabaseReference databaseReference;
@@ -57,6 +60,7 @@ public class AvailableBooksAdapter extends RecyclerView.Adapter<AvailableBooksAd
         this.bookList = bookList;
         this.activity = activity;
         this.context = context;
+        bookListFull = new ArrayList<>(bookList);
     }
 
 
@@ -95,7 +99,6 @@ public class AvailableBooksAdapter extends RecyclerView.Adapter<AvailableBooksAd
     public int getItemCount() {
         return bookList.size();
     }
-
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -189,4 +192,40 @@ public class AvailableBooksAdapter extends RecyclerView.Adapter<AvailableBooksAd
         });
 
     }
+
+    @Override
+    public Filter getFilter() {
+        return bookFilter;
+    }
+
+    private Filter bookFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence charSequence) {
+            List<Book> bookListFiltered = new ArrayList<>();
+
+            // if user didnt type anything, show all items
+            if(charSequence == null || charSequence.length() == 0){
+                bookListFiltered.addAll(bookListFull);
+            }else{
+                String filterPattern = charSequence.toString().toLowerCase().trim();
+                for(Book book : bookListFull){
+                    if(book.getBookName().toLowerCase().contains(filterPattern)){
+                        bookListFiltered.add(book);
+                    }
+                }
+            }
+
+            FilterResults filterResults = new FilterResults();
+            filterResults.values = bookListFiltered;
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+            bookList.clear();
+            bookList.addAll((List<Book>) filterResults.values);
+            notifyDataSetChanged();
+        }
+    };
+
 }

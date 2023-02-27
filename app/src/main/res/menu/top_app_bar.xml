@@ -6,7 +6,8 @@
         android:icon="@drawable/search"
         android:title="search"
         android:contentDescription="content_description_search"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"
+        app:actionViewClass="android.widget.SearchView" />
 
     <item
         android:id="@+id/log_out"

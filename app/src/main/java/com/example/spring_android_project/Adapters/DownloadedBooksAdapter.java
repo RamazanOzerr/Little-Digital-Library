@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,13 +20,15 @@ import com.example.spring_android_project.R;
 import com.example.spring_android_project.Utils.Book;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class DownloadedBooksAdapter extends RecyclerView.Adapter<DownloadedBooksAdapter.ViewHolder> {
+public class DownloadedBooksAdapter extends RecyclerView.Adapter<DownloadedBooksAdapter.ViewHolder> implements Filterable {
 
     private List<Book> bookList;
+    private List<Book> bookListFull;
     Activity activity;
     Context context;
 
@@ -32,6 +36,7 @@ public class DownloadedBooksAdapter extends RecyclerView.Adapter<DownloadedBooks
         this.bookList = bookList;
         this.activity = activity;
         this.context = context;
+        bookListFull = new ArrayList<>(bookList);
     }
 
     @NonNull
@@ -57,6 +62,41 @@ public class DownloadedBooksAdapter extends RecyclerView.Adapter<DownloadedBooks
     public int getItemCount() {
         return bookList.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return filter;
+    }
+
+    Filter filter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence charSequence) {
+            List<Book> bookListFiltered = new ArrayList<>();
+
+            // if user didnt type anything, show all items
+            if(charSequence == null || charSequence.length() == 0){
+                bookListFiltered.addAll(bookListFull);
+            }else{
+                String filterPattern = charSequence.toString().toLowerCase().trim();
+                for(Book book : bookListFull){
+                    if(book.getBookName().toLowerCase().contains(filterPattern)){
+                        bookListFiltered.add(book);
+                    }
+                }
+            }
+
+            FilterResults filterResults = new FilterResults();
+            filterResults.values = bookListFiltered;
+            return filterResults;
+        }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+            bookList.clear();
+            bookList.addAll((List<Book>) filterResults.values);
+            notifyDataSetChanged();
+        }
+    };
 
     public class ViewHolder extends  RecyclerView.ViewHolder{
 

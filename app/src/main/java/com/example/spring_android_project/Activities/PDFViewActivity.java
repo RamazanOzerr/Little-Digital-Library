@@ -2,35 +2,34 @@ package com.example.spring_android_project.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.pdf.PdfRenderer;
-import android.media.Image;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 
 import com.example.spring_android_project.R;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.pdfview.PDFView;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PDFViewActivity extends AppCompatActivity {
 
     private AppCompatImageView imageView_pdf;
     private PdfRenderer.Page page;
+    Bitmap bitmap;
     private MaterialToolbar toolbar;
-    private Button button_next, button_prev;
+    private RecyclerView recyclerView_pdf;
+    private List<Bitmap> pageList;
+    private PDFView pdfView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,31 +39,34 @@ public class PDFViewActivity extends AppCompatActivity {
         init();
         Intent intent = getIntent();
         String file_name = intent.getStringExtra("book_name");
-        viewPDF(file_name);
-
-
-//        button.setOnClickListener(view -> {
-//            button.setVisibility(View.GONE);
-//            viewPDF("sample");
-//        });
-////        viewPDF("sample");
+        String book_name = "sample";
+//        viewPDF(file_name);
+//        pdfView.fromFile("/sdcard/Download/sample2.pdf").show();
+//        pdfView.fromFile(file_name).show();
+        pdfView.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),book_name+".pdf")).show();
     }
 
     private void init(){
-        imageView_pdf = findViewById(R.id.imageView_pdf_view1);
+//        imageView_pdf = findViewById(R.id.imageView_pdf_view1);
         toolbar = findViewById(R.id.toolBar_pdfView);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        button_next = findViewById(R.id.button_next);
-        button_prev = findViewById(R.id.button_prev);
+        recyclerView_pdf = findViewById(R.id.recyclerView_pdf);
+        RecyclerView.LayoutManager mng = new GridLayoutManager(getApplicationContext(), 1);
+        recyclerView_pdf.setLayoutManager(mng);
+        pageList = new ArrayList<>();
+        pdfView = findViewById(R.id.pdfView);
     }
+
+
+
 
     private void viewPDF(String fileName){
         File pdfFile = new File("/sdcard/Download/sample2.pdf");
 //        File pdfFile = new File("/sdcard/Download/"+fileName+".pdf");
 //        File temp = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),fileName);
-        String filePath = getExternalFilesDir(fileName).getAbsolutePath()+".pdf";
-        System.out.println("path: "+filePath);
+//        String filePath = getExternalFilesDir(fileName).getAbsolutePath()+".pdf";
+//        System.out.println("path: "+filePath);
 //        File pdfFile = new File(filePath);
         PdfRenderer pdfRenderer = null;
         try {
@@ -77,29 +79,26 @@ public class PDFViewActivity extends AppCompatActivity {
         // TODO: şu an muhtemel en sonu gösteriyor, scrollView koyabiliriz buraya, ya da next,
         // prev gibi butonlar koyabiliriz
 
+//        int pageNumber = 0;
+//
+//        page = pdfRenderer.openPage(pageNumber);
 
-        page = pdfRenderer.openPage(0);
-        Bitmap bitmap = Bitmap.createBitmap(page.getWidth(), page.getHeight(), Bitmap.Config.ARGB_8888);
-        page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
-        // Do something with the bitmap, like displaying it in an ImageView
-        imageView_pdf.setImageBitmap(bitmap);
+//        Bitmap bitmap = Bitmap.createBitmap(page.getWidth(), page.getHeight(), Bitmap.Config.ARGB_8888);
+//        page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
+//        // Do something with the bitmap, like displaying it in an ImageView
+//        imageView_pdf.setImageBitmap(bitmap);
 
-        button_prev.setOnClickListener(view -> {
-
-        });
-
-        button_next.setOnClickListener(view -> {
-
-        });
-//        for(int i = 0; i < pageCount; i++){
-//            page = pdfRenderer.openPage(i);
-//            Bitmap bitmap = Bitmap.createBitmap(page.getWidth(), page.getHeight(), Bitmap.Config.ARGB_8888);
+        for(int i = 0; i < pageCount; i++){
+            page = pdfRenderer.openPage(i);
+            bitmap = Bitmap.createBitmap(page.getWidth(), page.getHeight(), Bitmap.Config.ARGB_8888);
+            pageList.add(bitmap);
 //            page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
 //            // Do something with the bitmap, like displaying it in an ImageView
 //            imageView_pdf.setImageBitmap(bitmap);
-//            page.close();
-//        }
-        page.close();
+            page.close();
+        }
+
+//        page.close();
         pdfRenderer.close();
     }
 

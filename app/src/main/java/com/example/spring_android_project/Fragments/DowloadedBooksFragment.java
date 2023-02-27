@@ -12,8 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.example.spring_android_project.Activities.MainActivity;
 import com.example.spring_android_project.Adapters.AvailableBooksAdapter;
@@ -73,7 +78,8 @@ public class DowloadedBooksFragment extends Fragment {
         return view;
     }
 
-    private void init(){
+    private void init() {
+//        Toast.makeText(getContext(),"BU BIR DENEME TOAST UDUR",Toast.LENGTH_LONG).show();
         bookList = new ArrayList<>();
         recyclerView_downloaded_books = view.findViewById(R.id.recyclerView_downloaded_books);
         RecyclerView.LayoutManager mng = new GridLayoutManager(getContext(), 1);
@@ -84,7 +90,7 @@ public class DowloadedBooksFragment extends Fragment {
 
     }
 
-    private void getCurrentUserId(){
+    private void getCurrentUserId() {
 
         //TODO db den kitap bilgilerini çekip listeye at aynı şekilde, AvailableBooksFragment da
         // yaptığımız işlemin aynısı
@@ -96,12 +102,12 @@ public class DowloadedBooksFragment extends Fragment {
         String link = "link";
 
 
-        bookList.add(new Book(photoPath,name,link));
-        bookList.add(new Book(photoPath,"1",link));
-        bookList.add(new Book(photoPath,"2",link));
-        bookList.add(new Book(photoPath,"3",link));
-        bookList.add(new Book(photoPath,"4",link));
-        adapter = new DownloadedBooksAdapter(bookList,getActivity(),getContext());
+        bookList.add(new Book(photoPath, name, link));
+        bookList.add(new Book(photoPath, "1", link));
+        bookList.add(new Book(photoPath, "2", link));
+        bookList.add(new Book(photoPath, "3", link));
+        bookList.add(new Book(photoPath, "4", link));
+        adapter = new DownloadedBooksAdapter(bookList, getActivity(), getContext());
         recyclerView_downloaded_books.setAdapter(adapter);
 
         databaseReference.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -140,7 +146,7 @@ public class DowloadedBooksFragment extends Fragment {
             public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
 
                 bookList = response.body();
-                adapter = new DownloadedBooksAdapter(bookList,getActivity(),getContext());
+                adapter = new DownloadedBooksAdapter(bookList, getActivity(), getContext());
                 recyclerView_downloaded_books.setAdapter(adapter);
             }
 
@@ -153,7 +159,7 @@ public class DowloadedBooksFragment extends Fragment {
 
     }
 
-    private void swipeToRemove(){
+    private void swipeToRemove() {
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -169,9 +175,9 @@ public class DowloadedBooksFragment extends Fragment {
                 bookList.remove(position);
                 adapter.notifyItemRemoved(position);
                 Snackbar.make(recyclerView_downloaded_books, deletedBook.getBookName()
-                        , Snackbar.LENGTH_LONG)
+                                , Snackbar.LENGTH_LONG)
                         .setAction("undo", view -> {
-                            bookList.add(position,deletedBook);
+                            bookList.add(position, deletedBook);
                             adapter.notifyItemInserted(position);
                             //TODO: undoFromDb();
                         }).show();
@@ -192,8 +198,29 @@ public class DowloadedBooksFragment extends Fragment {
         };
 
 
-
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView_downloaded_books);
     }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        Toast.makeText(getContext(),"FRAGMENT METHODUNDAYIZ",Toast.LENGTH_LONG).show();
+        super.onCreateOptionsMenu(menu, inflater);
+        MenuItem searchItem = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                Toast.makeText(getContext(), "FRAGMENT DAYIZ", Toast.LENGTH_LONG).show();
+                adapter.getFilter().filter(s);
+                return false;
+            }
+        });
+    }
+
 }
