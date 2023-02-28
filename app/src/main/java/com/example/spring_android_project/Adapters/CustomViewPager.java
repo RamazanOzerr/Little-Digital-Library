@@ -9,6 +9,8 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+
+// Adapter for ViewPager
 public class CustomViewPager extends FragmentPagerAdapter {
 
     private List<Fragment> fragmentList;

@@ -14,17 +14,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.SearchView;
 
-import com.example.spring_android_project.Activities.MainActivity;
 import com.example.spring_android_project.Adapters.AvailableBooksAdapter;
 import com.example.spring_android_project.Apis.Api;
 import com.example.spring_android_project.R;
 import com.example.spring_android_project.Services.BookService;
-import com.example.spring_android_project.Services.UserService;
 import com.example.spring_android_project.Utils.Book;
-import com.example.spring_android_project.Utils.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +30,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AvailableBooksFragment extends Fragment {
-
-    UserService userService;
     BookService bookService;
 
     private List<Book> bookList;
@@ -66,33 +60,8 @@ public class AvailableBooksFragment extends Fragment {
 
     }
 
-    // TODO KITAP BILGILERINI DB DEN BURDA CEKIYORUZ
+    // get books from db
    private void getBooks() {
-
-        //TODO DB DEN PHOTO PATH VE NAME BILGILERINI CEK, LISTEYE EKLE
-        String photoPath = "https://firebasestorage.googleapis.com/v0/b/libraryproject-1c015.appspot.com/o/book4.png?alt=media&token=f08c44fe-02f4-467e-869d-6b51fc774978";
-        String name = "name";
-        String link = "http://62.182.86.140/main/266000/16c402f4f9b737ea33c4ea5d938331a0/George%20Orwell%2C%20Erich%20Fromm%2C%20Thomas%20Pynchon%2C%20Daniel%20Lagin%20-%20Nineteen%20Eighty-Four-Plume%20%282003%29.pdf";
-//
-        bookList.add(new Book(photoPath,name,link,"komedi",31));
-           bookList.add(new Book(photoPath,name,link,"komedi",31));
-           bookList.add(new Book(photoPath,name,link,"komedi",31));
-           bookList.add(new Book(photoPath,name,link,"komedi",31));
-
-//        bookList.add(new Book(photoPath,name,link));
-//        bookList.add(new Book(photoPath,name,link));
-//        bookList.add(new Book(photoPath,name,link));
-//        bookList.add(new Book(photoPath,name,link));
-//       bookList.add(new Book(photoPath,name,link));
-//       bookList.add(new Book(photoPath,name,link));
-//       bookList.add(new Book(photoPath,name,link));
-//       bookList.add(new Book(photoPath,name,link));
-//       bookList.add(new Book(photoPath,name,link));
-//       bookList.add(new Book(photoPath,name,link));
-//       bookList.add(new Book(photoPath,name,link));
-//       bookList.add(new Book(photoPath,name,link));
-//       bookList.add(new Book(photoPath,name,link));
-
 
        bookService = Api.getBookService();
        Call<List<Book>> call =
@@ -105,10 +74,6 @@ public class AvailableBooksFragment extends Fragment {
                adapter = new AvailableBooksAdapter(bookList, getActivity(), getContext());
                recyclerView_available_books.setAdapter(adapter);
 
-               System.out.println(bookList.size());
-               for (Book b : bookList) {
-                   System.out.println(b.getBookName() + " " + b.getLink() + " " + b.getPhotoPath());
-               }
            }
 
            @Override
@@ -119,6 +84,7 @@ public class AvailableBooksFragment extends Fragment {
        });
    }
 
+   // set search bar
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
@@ -137,7 +103,6 @@ public class AvailableBooksFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String s) {
-//                Toast.makeText(getContext(), "FRAGMENT DAYIZ", Toast.LENGTH_LONG).show();
                 adapter.getFilter().filter(s);
                 return false;
             }

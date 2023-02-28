@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -15,10 +14,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.spring_android_project.Activities.MainActivity;
 import com.example.spring_android_project.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -31,6 +30,7 @@ public class LogInActivity extends AppCompatActivity {
     private ProgressBar progressBarLogin;
     FirebaseAuth auth;
     String emailOfuser, passwordOfuser;
+    private MaterialToolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +51,10 @@ public class LogInActivity extends AppCompatActivity {
         imageViewLogIn = findViewById(R.id.imageViewLogIn);
         progressBarLogin = findViewById(R.id.progressBarLogin);
         auth = FirebaseAuth.getInstance();
+        toolbar = findViewById(R.id.toolBar_login);
+        setSupportActionBar(toolbar);
+        toolbar.setLogo(R.drawable.book3);
+        toolbar.setTitle("LOG IN");
     }
 
     private void login(){
@@ -78,6 +82,7 @@ public class LogInActivity extends AppCompatActivity {
                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
                            } else {
                                Toast.makeText(LogInActivity.this, "Error!" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                               progressBarLogin.setVisibility(View.GONE);
                            }
                        }
                    });

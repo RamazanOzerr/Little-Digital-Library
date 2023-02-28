@@ -1,6 +1,5 @@
 package com.example.spring_android_project.Fragments;
 
-import android.Manifest;
 import android.graphics.Canvas;
 import android.os.Bundle;
 
@@ -20,18 +19,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
-import android.widget.Toast;
 
-import com.example.spring_android_project.Activities.MainActivity;
-import com.example.spring_android_project.Adapters.AvailableBooksAdapter;
 import com.example.spring_android_project.Adapters.DownloadedBooksAdapter;
 import com.example.spring_android_project.Apis.Api;
 import com.example.spring_android_project.R;
-import com.example.spring_android_project.Services.BookService;
 import com.example.spring_android_project.Services.UserService;
 import com.example.spring_android_project.Utils.Book;
 import com.example.spring_android_project.Utils.User;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,12 +34,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,12 +46,10 @@ import retrofit2.Response;
 public class DowloadedBooksFragment extends Fragment {
 
     private UserService userService;
-    private BookService bookService;
     private User user;
     private List<Book> bookList;
     private RecyclerView recyclerView_downloaded_books;
     DownloadedBooksAdapter adapter;
-    FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
     DatabaseReference databaseReference;
     View view;
@@ -87,8 +73,8 @@ public class DowloadedBooksFragment extends Fragment {
         return view;
     }
 
+    // initialize
     private void init() {
-//        Toast.makeText(getContext(),"BU BIR DENEME TOAST UDUR",Toast.LENGTH_LONG).show();
         bookList = new ArrayList<>();
         recyclerView_downloaded_books = view.findViewById(R.id.recyclerView_downloaded_books);
         RecyclerView.LayoutManager mng = new GridLayoutManager(getContext(), 1);
@@ -96,40 +82,10 @@ public class DowloadedBooksFragment extends Fragment {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         databaseReference = FirebaseDatabase.getInstance().getReference();
         swipeRefreshLayout = view.findViewById(R.id.swipe_to_refresh_layout);
-        askPermission();
 
-    }
-    private void askPermission() {
-        Dexter.withContext(getContext()).withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                .withListener(new PermissionListener() {
-                    @Override
-                    public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-
-                    }
-
-                    @Override
-                    public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
-
-                    }
-                }).check();
     }
 
     private void getCurrentUserId() {
-
-        //TODO db den kitap bilgilerini çekip listeye at aynı şekilde, AvailableBooksFragment da
-        // yaptığımız işlemin aynısı
-
-        // todo: firebase current user -- returns user id.
-        // todo: post (/books/userid/bookid)
-        String photoPath = "https://firebasestorage.googleapis.com/v0/b/libraryproject-1c015.appspot.com/o/book4.png?alt=media&token=f08c44fe-02f4-467e-869d-6b51fc774978";
-        String name = "name";
-        String link = "link";
-
 
         databaseReference.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -157,8 +113,6 @@ public class DowloadedBooksFragment extends Fragment {
     }
 
     private void displayBooksForUser(int userId) {
-        System.out.println("*******************" + userId);
-
 
         userService = Api.getUserService();
         Call<List<Book>> call = userService.getAllBooksForUser(userId);
@@ -181,6 +135,7 @@ public class DowloadedBooksFragment extends Fragment {
 
     }
 
+    // set swipe to remove feature, also possible to undo deletion by using SnackBar
     private void swipeToRemove() {
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             @Override
@@ -203,6 +158,7 @@ public class DowloadedBooksFragment extends Fragment {
 
                         });
                 snackbar.show();
+                // remove book from db as well if user didnt undo deletion
                 snackbar.addCallback(new Snackbar.Callback() {
 
                     @Override
@@ -238,6 +194,8 @@ public class DowloadedBooksFragment extends Fragment {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView_downloaded_books);
     }
+
+    // set search feature
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
@@ -258,7 +216,6 @@ public class DowloadedBooksFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                Toast.makeText(getContext(), "FRAGMENT DAYIZ", Toast.LENGTH_LONG).show();
                 adapter.getFilter().filter(s);
                 return false;
             }
@@ -267,14 +224,11 @@ public class DowloadedBooksFragment extends Fragment {
 
     private void deleteBookForUser(int userId, int bookId) {
 
-
         userService = Api.getUserService();
         Call<String> call = userService.deleteBookForUser(userId,bookId);
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                System.out.println(response.code());
-                System.out.println(response.body());
             }
 
             @Override
@@ -282,7 +236,5 @@ public class DowloadedBooksFragment extends Fragment {
 
             }
         });
-
     }
-
 }

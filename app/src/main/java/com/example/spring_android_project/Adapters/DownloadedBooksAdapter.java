@@ -53,7 +53,6 @@ public class DownloadedBooksAdapter extends RecyclerView.Adapter<DownloadedBooks
         holder.book_name_downloaded.setText(bookList.get(position).getBookName());
 
         holder.displayBtn.setOnClickListener(view -> {
-            //TODO display method
             displayBook(bookList.get(position).getBookName());
         });
     }
@@ -116,7 +115,8 @@ public class DownloadedBooksAdapter extends RecyclerView.Adapter<DownloadedBooks
         }
     }
 
-    //TODO method sonra doldurulacak
+    // sent name of the book to the PDFViewActivity,
+    // it'll be used to find pdf in the external storage
     private void displayBook(String book_name){
         Intent intent = new Intent(context, PDFViewActivity.class);
         intent.putExtra("book_name",book_name);

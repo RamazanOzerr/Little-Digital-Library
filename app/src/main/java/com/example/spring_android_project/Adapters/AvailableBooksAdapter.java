@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
-import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -24,9 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.spring_android_project.Apis.Api;
 import com.example.spring_android_project.R;
 import com.example.spring_android_project.Services.BookService;
-import com.example.spring_android_project.Services.UserService;
 import com.example.spring_android_project.Utils.Book;
-import com.example.spring_android_project.Utils.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -37,7 +34,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -53,7 +49,6 @@ public class AvailableBooksAdapter extends RecyclerView.Adapter<AvailableBooksAd
     Context context;
     DatabaseReference databaseReference;
     FirebaseUser firebaseUser;
-    UserService userService;
     BookService bookService;
 
     public AvailableBooksAdapter(List<Book> bookList, Activity activity, Context context) {
@@ -64,6 +59,7 @@ public class AvailableBooksAdapter extends RecyclerView.Adapter<AvailableBooksAd
     }
 
 
+    // set layout
     @NonNull
     @Override
     public AvailableBooksAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -76,21 +72,14 @@ public class AvailableBooksAdapter extends RecyclerView.Adapter<AvailableBooksAd
     @Override
     public void onBindViewHolder(@NonNull AvailableBooksAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         Picasso.get().load(bookList.get(position).getPhotoPath()).into(holder.book_image_available);
-//        holder.book_name_available.setText(bookList.get(position).getBookName());
         holder.text_name_view.setText(bookList.get(position).getBookName());
         holder.text_page_view.setText(String.valueOf(bookList.get(position).getPages()));
         holder.text_title_view.setText(bookList.get(position).getTitle());
 
         holder.downloadbtn.setOnClickListener(view -> {
             downloadBook(bookList.get(position).getLink(), bookList.get(position).getBookName()+".pdf");
-            System.out.println(bookList.get(position).getLink());
-
             getCurrentUserId(bookList.get(position).getId());
         });
-        System.out.println("*****************************");
-        System.out.println(bookList.get(position).getBookName());
-        System.out.println((bookList.get(position).getId()));
-        System.out.println(bookList.get(position).getPhotoPath());
 
 
     }
@@ -124,9 +113,6 @@ public class AvailableBooksAdapter extends RecyclerView.Adapter<AvailableBooksAd
 
     private void downloadBook(String url, String title) {
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-
-       // String title = URLUtil.guessFileName(url, null, null);
-        //String title = "sample2.pdf";
         request.setTitle(title);
         request.setDescription("book is downloading...");
         String cookie = CookieManager.getInstance().getCookie(url);
@@ -145,26 +131,17 @@ public class AvailableBooksAdapter extends RecyclerView.Adapter<AvailableBooksAd
         databaseReference = FirebaseDatabase.getInstance().getReference();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        //TODO db den kitap bilgilerini çekip listeye at aynı şekilde, AvailableBooksFragment da
-        // yaptığımız işlemin aynısı
-
-        // todo: firebase current user -- returns user id.
-        // todo: post (/books/userid/bookid)
-
+        // get current user id from firebase database
         databaseReference.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String userId;
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    System.out.println("****************************************************************");
-                    System.out.println(firebaseUser.toString());
                     if (dataSnapshot.child("email").getValue().toString().equals(firebaseUser.getEmail())) {
-
                         userId = dataSnapshot.getKey();
                         addBookForUser(Integer.parseInt(userId),bookId);
                         break;
                     }
-
                 }
             }
 
@@ -175,15 +152,12 @@ public class AvailableBooksAdapter extends RecyclerView.Adapter<AvailableBooksAd
         });
     }
     private void addBookForUser(int userId, int bookId) {
-        System.out.println("*******************" + userId);
-
         bookService = Api.getBookService();
         Call<Book> call = bookService.addBookForUser(userId,bookId);
         call.enqueue(new Callback<Book>() {
             @Override
             public void onResponse(Call<Book> call, Response<Book> response) {
 
-                System.out.println(response.code());
             }
 
             @Override
@@ -194,6 +168,7 @@ public class AvailableBooksAdapter extends RecyclerView.Adapter<AvailableBooksAd
 
     }
 
+    // method to activate search bar
     @Override
     public Filter getFilter() {
         return bookFilter;

@@ -20,6 +20,7 @@ import com.example.spring_android_project.Services.UserService;
 import com.example.spring_android_project.Utils.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -38,11 +39,12 @@ import retrofit2.Response;
 
 public class SignUpActivity extends AppCompatActivity {
 
-     EditText passwordSignUp, passwordSignUp_1, emailSignUp, name, editText_last_name;
-     TextView loginText;
-     Button signUpbutton;
-     ImageView ImageViewSignUp;
-     ProgressBar progressBarSignUp;
+     private EditText passwordSignUp, passwordSignUp_1, emailSignUp, name, editText_last_name;
+     private TextView loginText;
+     private Button signUpbutton;
+     private ImageView ImageViewSignUp;
+     private ProgressBar progressBarSignUp;
+     private MaterialToolbar toolbar;
      FirebaseAuth auth;
      DatabaseReference reference;
      FirebaseUser user;
@@ -55,8 +57,15 @@ public class SignUpActivity extends AppCompatActivity {
 
         init();
         signUp();
+        loginText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), LogInActivity.class));
+            }
+        });
     }
 
+    // initialize
     private void init(){
         passwordSignUp = findViewById(R.id.passwordSignUp);
         passwordSignUp_1 = findViewById(R.id.passwordSignUp_1);
@@ -70,8 +79,13 @@ public class SignUpActivity extends AppCompatActivity {
         user = auth.getCurrentUser();
         name = findViewById(R.id.name);
         editText_last_name = findViewById(R.id.editText_last_name);
+        toolbar = findViewById(R.id.toolBar_sign_up);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle("SIGN UP");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    // sign up firebase auth via email and password
     private void signUp(){
         signUpbutton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,7 +141,7 @@ public class SignUpActivity extends AppCompatActivity {
                             postAddUserToApi(user);
 
 
-                            Toast.makeText(SignUpActivity.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignUpActivity.this, "Signed up Successfully", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), LogInActivity.class));
 
                         } else {
@@ -148,12 +162,6 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
 
-                if (!response.isSuccessful()) {
-                    System.out.println("SUCCESFULLY ADDED");
-                    System.out.println(response.code());
-                    return;
-                }
-
             }
 
             @Override
@@ -161,18 +169,10 @@ public class SignUpActivity extends AppCompatActivity {
                 System.out.println("FAILED");
             }
         });
-
-
     }
 
-    private void setUserInfoIntoDb( String namee, String last_name, String email){
-//        reference.child("Users").child(user.getUid());
-//        Map<String, String> map = new HashMap<>();
-//        map.put("id","1");
-//        map.put("email",email); //alternatif olarak user.getEmail() de kullanılabilir
-//        reference.setValue(map);
-
-
+    // set user info into firebase database
+    private void setUserInfoIntoDb(String namee, String last_name, String email){
         reference.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -200,33 +200,5 @@ public class SignUpActivity extends AppCompatActivity {
 
             }
         });
-
-//        reference.child("Users").addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                int count = (int) snapshot.getChildrenCount();
-//                DatabaseReference databaseReference = reference.child("Users").child(user.getUid());
-//                databaseReference.addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        Map<String, String> map = new HashMap<>();
-//                        map.put("id",String.valueOf(count));
-//                        map.put("email",email);
-//                        databaseReference.setValue(map);
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
     }
-
 }

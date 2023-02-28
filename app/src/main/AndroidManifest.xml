@@ -34,7 +34,8 @@
         </activity>
         <activity
             android:name=".Activities.SignUpActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".Activities.LogInActivity"/>
         <activity
             android:name=".Activities.LogInActivity"
             android:exported="false" />
