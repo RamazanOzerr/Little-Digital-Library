@@ -1,12 +1,19 @@
 package com.example.spring_android_project.Activities;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
+
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,7 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
+    private final int STORAGE_PERMISSION_CODE = 1;
     private UserService userService;
     private BookService bookService;
     private List<User> listUser = new ArrayList<>();
@@ -59,19 +66,7 @@ public class MainActivity extends AppCompatActivity {
         init();
         replaceFragments(new AvailableBooksFragment());
         setFragments();
-
-//        navigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//
-//                if(item.getItemId() == R.id.page1){
-//                    replaceFragments(new AvailableBooksFragment());
-//                }else if(item.getItemId() == R.id.page2) {
-//                    replaceFragments(new DowloadedBooksFragment());
-//                }
-//                return false;
-//            }
-//        });
+        runTimePermissions();
 
         navigationView.setVisibility(View.GONE);
     }
@@ -164,5 +159,62 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == STORAGE_PERMISSION_CODE){
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    && grantResults[1] == PackageManager.PERMISSION_GRANTED){
+                Toast.makeText(getApplicationContext(),"PERMISSION GRANTED",Toast.LENGTH_LONG).show();
+            }else{
+                Toast.makeText(getApplicationContext(),"PERMISSION DENIED",Toast.LENGTH_LONG).show();
+
+            }
+        }
+
+    }
+    private void requestStoragePermission(){
+
+//        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},STORAGE_PERMISSION_CODE);
+        if(ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.READ_EXTERNAL_STORAGE)
+                && ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.WRITE_EXTERNAL_STORAGE) ){
+            new AlertDialog.Builder(this).setTitle("Permission needed")
+                    .setMessage("This permission needed to access your storage and open pdf files")
+                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            ActivityCompat.requestPermissions(MainActivity.this, new String[]
+                                    {Manifest.permission.READ_EXTERNAL_STORAGE
+                                            , Manifest.permission.WRITE_EXTERNAL_STORAGE},STORAGE_PERMISSION_CODE);
+
+                        }
+                    })
+                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    }).create().show();
+        }else{
+            ActivityCompat.requestPermissions(this, new String[]
+                    {Manifest.permission.READ_EXTERNAL_STORAGE
+                            , Manifest.permission.WRITE_EXTERNAL_STORAGE},STORAGE_PERMISSION_CODE);
+        }
+    }
+    private void runTimePermissions(){
+//        if(ContextCompat.checkSelfPermission(getApplicationContext(),Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+//            requestStoragePermission();
+//        }
+        if(ContextCompat.checkSelfPermission(getApplicationContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(getApplicationContext(),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+            Toast.makeText(getApplicationContext(),"already granted",Toast.LENGTH_LONG).show();
+        }else{
+            requestStoragePermission();
+        }
+    }
+
 
 }

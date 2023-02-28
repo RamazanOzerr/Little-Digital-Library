@@ -116,7 +116,7 @@ public class DowloadedBooksFragment extends Fragment {
                     public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
 
                     }
-                });
+                }).check();
     }
 
     private void getCurrentUserId() {
@@ -246,7 +246,7 @@ public class DowloadedBooksFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        Toast.makeText(getContext(),"FRAGMENT METHODUNDAYIZ",Toast.LENGTH_LONG).show();
+        //Toast.makeText(getContext(),"FRAGMENT METHODUNDAYIZ",Toast.LENGTH_LONG).show();
         super.onCreateOptionsMenu(menu, inflater);
         MenuItem searchItem = menu.findItem(R.id.search);
         SearchView searchView = (SearchView) searchItem.getActionView();
@@ -259,7 +259,7 @@ public class DowloadedBooksFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String s) {
                 Toast.makeText(getContext(), "FRAGMENT DAYIZ", Toast.LENGTH_LONG).show();
-                //adapter.getFilter().filter(s);
+                adapter.getFilter().filter(s);
                 return false;
             }
         });

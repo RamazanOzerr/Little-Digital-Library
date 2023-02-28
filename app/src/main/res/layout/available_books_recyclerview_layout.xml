@@ -72,7 +72,8 @@
                     app:layout_constraintStart_toEndOf="@id/book_image_available"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginStart="20dp"
+
                     >
                     <TextView
                         android:layout_width="wrap_content"
@@ -107,6 +108,7 @@
                         android:textSize="18sp"
                         android:textColor="@color/teal_700"
                         />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -116,7 +118,13 @@
                         tools:text="name of the book"
                         android:layout_marginTop="10dp"
                         android:textSize="18sp"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:focusableInTouchMode="true"
+                        android:focusable="true"
+                        android:ellipsize="marquee"
                         android:textColor="@color/teal_200"
+                        android:singleLine="true"
+                        android:scrollHorizontally="true"
                         />
                     <TextView
                         android:layout_width="wrap_content"

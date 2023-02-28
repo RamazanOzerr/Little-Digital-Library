@@ -115,6 +115,7 @@ public class AvailableBooksAdapter extends RecyclerView.Adapter<AvailableBooksAd
             book_image_available = itemView.findViewById(R.id.book_image_available);
             downloadbtn = itemView.findViewById(R.id.download_btn);
             text_name_view = itemView.findViewById(R.id.text_name_view);
+            text_name_view.setSelected(true);
             text_page_view = itemView.findViewById(R.id.text_page_view);
             text_title_view = itemView.findViewById(R.id.text_title_view);
 

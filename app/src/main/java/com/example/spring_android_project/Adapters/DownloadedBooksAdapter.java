@@ -25,7 +25,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class DownloadedBooksAdapter extends RecyclerView.Adapter<DownloadedBooksAdapter.ViewHolder> {
+public class DownloadedBooksAdapter extends RecyclerView.Adapter<DownloadedBooksAdapter.ViewHolder> implements Filterable {
 
     private List<Book> bookList;
     private List<Book> bookListFull;
@@ -36,7 +36,7 @@ public class DownloadedBooksAdapter extends RecyclerView.Adapter<DownloadedBooks
         this.bookList = bookList;
         this.activity = activity;
         this.context = context;
-        //bookListFull = new ArrayList<>(bookList);
+        bookListFull = new ArrayList<>(bookList);
     }
 
     @NonNull
@@ -63,7 +63,7 @@ public class DownloadedBooksAdapter extends RecyclerView.Adapter<DownloadedBooks
         return bookList.size();
     }
 
-    /*@Override
+    @Override
     public Filter getFilter() {
         return filter;
     }
@@ -96,7 +96,7 @@ public class DownloadedBooksAdapter extends RecyclerView.Adapter<DownloadedBooks
             bookList.addAll((List<Book>) filterResults.values);
             notifyDataSetChanged();
         }
-    };*/
+    };
 
     public class ViewHolder extends  RecyclerView.ViewHolder{
 
