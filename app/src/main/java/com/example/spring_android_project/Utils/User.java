@@ -25,6 +25,10 @@ public class User {
         this.lastName = lastName;
         this.email = email;
     }
+    public User(int id) {
+        this.id = id;
+    }
+
 
     public int getId() {
         return id;

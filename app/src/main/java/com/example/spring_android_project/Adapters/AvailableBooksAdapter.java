@@ -82,7 +82,7 @@ public class AvailableBooksAdapter extends RecyclerView.Adapter<AvailableBooksAd
         holder.text_title_view.setText(bookList.get(position).getTitle());
 
         holder.downloadbtn.setOnClickListener(view -> {
-            downloadBook(bookList.get(position).getLink());
+            downloadBook(bookList.get(position).getLink(), bookList.get(position).getBookName()+".pdf");
             System.out.println(bookList.get(position).getLink());
 
             getCurrentUserId(bookList.get(position).getId());
@@ -121,11 +121,11 @@ public class AvailableBooksAdapter extends RecyclerView.Adapter<AvailableBooksAd
         }
     }
 
-    private void downloadBook(String url) {
+    private void downloadBook(String url, String title) {
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
 
-//        String title = URLUtil.guessFileName(url, null, null);
-        String title = "sample2.pdf";
+       // String title = URLUtil.guessFileName(url, null, null);
+        //String title = "sample2.pdf";
         request.setTitle(title);
         request.setDescription("book is downloading...");
         String cookie = CookieManager.getInstance().getCookie(url);

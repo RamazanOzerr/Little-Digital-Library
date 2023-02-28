@@ -7,6 +7,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -24,4 +25,8 @@ public interface UserService {
 
     @GET("users/{userId}/books")  // todo: get all books for a user (downloaded books)
     Call<List<Book>> getAllBooksForUser(@Path("userId") int userId);
+
+    @DELETE("users/{userId}/{bookId}")
+    Call<String> deleteBookForUser(@Path("userId") int userId,
+                                   @Path("bookId") int bookId);
 }

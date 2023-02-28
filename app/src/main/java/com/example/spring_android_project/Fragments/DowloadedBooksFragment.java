@@ -1,9 +1,11 @@
 package com.example.spring_android_project.Fragments;
 
+import android.Manifest;
 import android.graphics.Canvas;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -38,6 +40,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +59,7 @@ public class DowloadedBooksFragment extends Fragment {
 
     private UserService userService;
     private BookService bookService;
+    private User user;
     private List<Book> bookList;
     private RecyclerView recyclerView_downloaded_books;
     DownloadedBooksAdapter adapter;
@@ -87,7 +96,27 @@ public class DowloadedBooksFragment extends Fragment {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         databaseReference = FirebaseDatabase.getInstance().getReference();
         swipeRefreshLayout = view.findViewById(R.id.swipe_to_refresh_layout);
+        askPermission();
 
+    }
+    private void askPermission() {
+        Dexter.withContext(getContext()).withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                .withListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
+
+                    }
+
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
+
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
+
+                    }
+                });
     }
 
     private void getCurrentUserId() {
@@ -102,14 +131,6 @@ public class DowloadedBooksFragment extends Fragment {
         String link = "link";
 
 
-        bookList.add(new Book(photoPath, name, link));
-        bookList.add(new Book(photoPath, "1", link));
-        bookList.add(new Book(photoPath, "2", link));
-        bookList.add(new Book(photoPath, "3", link));
-        bookList.add(new Book(photoPath, "4", link));
-        adapter = new DownloadedBooksAdapter(bookList, getActivity(), getContext());
-        recyclerView_downloaded_books.setAdapter(adapter);
-
         databaseReference.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -118,6 +139,7 @@ public class DowloadedBooksFragment extends Fragment {
                     if (dataSnapshot.child("email").getValue().toString().equals(firebaseUser.getEmail())) {
 
                         userId = dataSnapshot.getKey();
+                        user = new User(Integer.parseInt(userId));
                         displayBooksForUser(Integer.parseInt(userId));
                         break;
                     }
@@ -170,18 +192,33 @@ public class DowloadedBooksFragment extends Fragment {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
                 Book deletedBook = bookList.get(position);
-                //TODO: recyclerView üzerinde silme işlemini burada yapıyoruz, db den silme de burada olmalı
-                //TODO: removeFromDb();
+
                 bookList.remove(position);
                 adapter.notifyItemRemoved(position);
-                Snackbar.make(recyclerView_downloaded_books, deletedBook.getBookName()
+                Snackbar snackbar = Snackbar.make(recyclerView_downloaded_books, deletedBook.getBookName()
                                 , Snackbar.LENGTH_LONG)
                         .setAction("undo", view -> {
                             bookList.add(position, deletedBook);
                             adapter.notifyItemInserted(position);
-                            //TODO: undoFromDb();
-                        }).show();
 
+                        });
+                snackbar.show();
+                snackbar.addCallback(new Snackbar.Callback() {
+
+                    @Override
+                    public void onDismissed(Snackbar snackbar, int event) {
+                        if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT) {
+                            // Snackbar closed on its own
+                            deleteBookForUser(user.getId(), deletedBook.getId());
+
+                        }
+                    }
+
+                    @Override
+                    public void onShown(Snackbar snackbar) {
+
+                    }
+                });
             }
 
             @Override
@@ -201,6 +238,11 @@ public class DowloadedBooksFragment extends Fragment {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView_downloaded_books);
     }
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
@@ -217,10 +259,30 @@ public class DowloadedBooksFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String s) {
                 Toast.makeText(getContext(), "FRAGMENT DAYIZ", Toast.LENGTH_LONG).show();
-                adapter.getFilter().filter(s);
+                //adapter.getFilter().filter(s);
                 return false;
             }
         });
+    }
+
+    private void deleteBookForUser(int userId, int bookId) {
+
+
+        userService = Api.getUserService();
+        Call<String> call = userService.deleteBookForUser(userId,bookId);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                System.out.println(response.code());
+                System.out.println(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+            }
+        });
+
     }
 
 }
