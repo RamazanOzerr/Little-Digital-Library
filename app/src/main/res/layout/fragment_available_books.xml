@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/recyclerView_available_books"
         tools:listitem="@layout/available_books_recyclerview_layout"
+        android:layout_marginBottom="100dp"
         />
 
 </RelativeLayout>

@@ -32,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/name"
-            android:hint="name"
+            android:hint="Name"
             android:textColorHint="#009688"
             android:textStyle="italic"
             android:textColor="#009688"
@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/editText_last_name"
-            android:hint="last name"
+            android:hint="Last name"
             android:textColorHint="#009688"
             android:textStyle="italic"
             android:textColor="#009688"
@@ -129,13 +129,13 @@
 
         <ImageView
             android:layout_width="150dp"
-            android:layout_height="100dp"
+            android:layout_height="150dp"
             android:id="@+id/ImageViewSignUp"
             app:layout_constraintBottom_toTopOf="@+id/name"
             app:layout_constraintEnd_toEndOf="@+id/emailSignUp"
             app:layout_constraintStart_toStartOf="@+id/emailSignUp"
             app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/splashicon1"
+            android:src="@drawable/book6"
             android:layout_marginTop="30dp"
             />
 
