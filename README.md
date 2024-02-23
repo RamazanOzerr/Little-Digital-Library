@@ -4,8 +4,10 @@ This is an android app that user can download pdf of books and display them insi
 ## Reach out our Spring Boot App
 https://github.com/berkayblm/spring-library-hibernate-crud
 ## Features
-1- download pdf books and save them                               
-2- Display books from external storage
+* Sign in / Sign up
+* Listing the books in the library
+* Downloading a book
+* Viewing a downloaded book in the embedded PDF reader
 ## Which Technologies did we use?
 Android Java 17, Firebase services(Firebase Authentication, Firebase Realtime Database, Firebase Storage)
 Java Spring Boot, MySql, Hibernate, Retrofit
